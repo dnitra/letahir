@@ -36,8 +36,8 @@ export default function AppLayout({
 
       <div className="min-h-screen bg-gray-100">
         <nav className="bg-white border-b border-gray-100">
+            {/*big sign "LETAHIR" then horizontal white divider, then navlingks*/}
             <PrimaryNavigation page={page} logout={logout} setShowingNavigationDropdown={setShowingNavigationDropdown} showingNavigationDropdown={showingNavigationDropdown}  />
-
             <PrimaryNavigationMobile page={page} logout={logout} setShowingNavigationDropdown={setShowingNavigationDropdown} showingNavigationDropdown={showingNavigationDropdown} />
         </nav>
 

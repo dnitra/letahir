@@ -3,7 +3,7 @@ import ResponsiveNavLink from "@/Components/common/ResponsiveNavLink";
 import ProfileSettingsMobile from "@/Components/containers/mobile/ProfileSettingsMobile";
 import React from "react";
 import route from "ziggy-js";
-
+import AuthMobile from "@/Components/containers/mobile/AuthMobile";
 
 export default function PrimaryNavigationMobile({page, logout, setShowingNavigationDropdown, showingNavigationDropdown}: {page: any, logout: any, setShowingNavigationDropdown: any, showingNavigationDropdown: any}) {
     return (
@@ -22,7 +22,10 @@ export default function PrimaryNavigationMobile({page, logout, setShowingNavigat
                 </ResponsiveNavLink>
             </div>
 
-            {/* <!-- Responsive Settings Options --> */}
-            <ProfileSettingsMobile page={page} logout={logout}/>
+            {page.props.auth.user ?
+                (<ProfileSettingsMobile page={page} logout={logout} />) :
+                (<AuthMobile />)
+            }
+
         </div>)
 }
