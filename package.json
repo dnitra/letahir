@@ -31,6 +31,7 @@
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-social-media-embed": "^2.3.6",
     "ziggy-js": "^1.8.1"
   },
   "prettier": {

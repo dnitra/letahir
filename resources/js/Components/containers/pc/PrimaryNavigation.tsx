@@ -80,10 +80,10 @@ export default function PrimaryNavigation({page, logout, setShowingNavigationDro
                             Home
                         </NavLink>
                         <NavLink
-                            href={route('home')}
-                            active={route().current('Home')}
+                            href={route('about')}
+                            active={route().current('about')}
                         >
-                            Home
+                            About
                         </NavLink>
                     </div>
 

@@ -4,6 +4,7 @@ import ProfileSettingsMobile from "@/Components/containers/mobile/ProfileSetting
 import React from "react";
 import route from "ziggy-js";
 import AuthMobile from "@/Components/containers/mobile/AuthMobile";
+import NavLink from "@/Components/common/NavLink";
 
 export default function PrimaryNavigationMobile({page, logout, setShowingNavigationDropdown, showingNavigationDropdown}: {page: any, logout: any, setShowingNavigationDropdown: any, showingNavigationDropdown: any}) {
     return (
@@ -19,6 +20,12 @@ export default function PrimaryNavigationMobile({page, logout, setShowingNavigat
                     active={route().current('home')}
                 >
                     Home
+                </ResponsiveNavLink>
+                <ResponsiveNavLink
+                    href={route('about')}
+                    active={route().current('about')}
+                >
+                    About
                 </ResponsiveNavLink>
             </div>
 
