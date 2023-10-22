@@ -19,13 +19,19 @@ export default function PrimaryNavigationMobile({page, logout, setShowingNavigat
                     href={route('home')}
                     active={route().current('home')}
                 >
-                    Home
+                    Domů
                 </ResponsiveNavLink>
                 <ResponsiveNavLink
                     href={route('about')}
                     active={route().current('about')}
                 >
-                    About
+                    O nás
+                </ResponsiveNavLink>
+                <ResponsiveNavLink
+                    href={route('products.list')}
+                    active={route().current('products.list')}
+                >
+                    Úklidové služby
                 </ResponsiveNavLink>
             </div>
 

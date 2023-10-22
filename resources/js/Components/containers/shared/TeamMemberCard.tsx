@@ -11,7 +11,7 @@ interface Props {
 
 export default function TeamMemberCard({ member }: Props) {
     return (
-        <div className="flex flex-col items-center justify-center lg:w-1/3 sm:w-full">
+        <div className="flex flex-col items-center justify-center w-full lg:w-1/3">
         <div className="flex-shrink-0">
             <img
             className="w-full rounded-full"

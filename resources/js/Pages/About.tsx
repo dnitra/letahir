@@ -50,7 +50,7 @@ export default function Home() {
             <div className="w-full bg-white flex flex-col justify-center items-center">
                 <div className="text-center text-secondary font-light leading-tight w-3/4 mb-6">
                     <h1 className="text-3xl">CO JE LETAHIR</h1>
-                    <div className="text-center text-secondary text-2xl font-light">
+                    <div className="text-center text-secondary text-xl font-light">
                         <p className={"mt-3"}>
                             LETAHIR je čistota. Doslova. Hebrejské slovo לְטַהֵר znamená očistit. Ne pouze fyzicky,
                             ale fyzicky a duševně zároveň. Právě to je myšlenka a filosofie této firmy.
@@ -77,7 +77,7 @@ export default function Home() {
                         </p>
                     </div>
                 </div>
-                <div className="w-full bg-secondary flex justify-center items-center mt-6 mb-6">
+                <div className="w-full bg-secondary flex justify-center items-center mt-6 ">
                     <div className="text-center text-white font-light leading-tight w-3/4 mb-6">
                         <h1 className="text-3xl mt-6">NÁŠ TÝM</h1>
                         <div className="text-center text-white text-2xl font-light">

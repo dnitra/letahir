@@ -19,6 +19,7 @@ export default {
             },
             backgroundColor: {
                 'secondary': '#494848',
+                'secondary-dark': '#333',
             }
         },
     },

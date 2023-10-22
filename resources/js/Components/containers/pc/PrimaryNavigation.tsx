@@ -85,6 +85,12 @@ export default function PrimaryNavigation({page, logout, setShowingNavigationDro
                         >
                             About
                         </NavLink>
+                        <NavLink
+                            href={route('products.list')}
+                            active={route().current('products.list')}
+                        >
+                            Úklidové služby
+                        </NavLink>
                     </div>
 
                 </div>
