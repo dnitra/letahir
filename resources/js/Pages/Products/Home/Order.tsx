@@ -5,6 +5,7 @@ import ProductCounter from "@/Components/containers/shared/ProductCounter";
 
 
 export default function Order({product}: any) {
+
     const rooms = useCounter(1, 'pokoj', ['pokoje', 'pokojů']);
     const bathrooms = useCounter(1, 'koupelna', ['koupelny', 'koupelen']);
 

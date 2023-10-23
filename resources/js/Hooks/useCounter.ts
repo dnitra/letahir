@@ -1,12 +1,14 @@
 import {useState} from "react";
+import {router} from "@inertiajs/react";
 
 const useCounter = (initialAmount : number, singular : string, plurals : string[]) => {
-    const [amount, setAmount] = useState(initialAmount);
+    const [amount, setAmount] = useState(router.restore(singular)?? initialAmount);
 
     const updateAmount = (newAmount : number) => {
         if (newAmount >= 1) {
             setAmount(newAmount);
         }
+        router.remember(newAmount, singular);
     };
 
     const getText = (amount : number) => {
