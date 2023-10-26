@@ -7,7 +7,9 @@ import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfile
 import useTypedPage from '@/Hooks/useTypedPage';
 import SectionBorder from '@/Components/common/SectionBorder';
 import AppLayout from '@/Layouts/AppLayout';
-import { Session } from '@/types';
+import Session from "@/Types/Session";
+import User from "@/Types/User";
+import user from "@/Types/User";
 
 interface Props {
   sessions: Session[];
@@ -19,6 +21,7 @@ export default function Show({
   confirmsTwoFactorAuthentication,
 }: Props) {
   const page = useTypedPage();
+  const user = page.props.auth
 
   return (
     <AppLayout
@@ -33,7 +36,7 @@ export default function Show({
         <div className="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
           {page.props.jetstream.canUpdateProfileInformation ? (
             <div>
-              <UpdateProfileInformationForm user={page.props.auth.user!} />
+              <UpdateProfileInformationForm user={user} />
 
               <SectionBorder />
             </div>

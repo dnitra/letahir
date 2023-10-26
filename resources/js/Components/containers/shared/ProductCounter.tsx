@@ -1,4 +1,5 @@
 import React from 'react';
+import PrimaryButton from "@/Components/common/PrimaryButton";
 
 
 interface Product {
@@ -9,31 +10,25 @@ interface Product {
 }
 
 const CounterButton = ({ product }: { product: Product }) => {
-    const buttonClass = 'shrink-1 inline-flex items-center px-2 py-2 border border-transparent ' +
-        'leading-6 font-medium rounded-md text-white bg-secondary group hover:bg-secondary-dark hover:text-white ' +
-        'focus:outline-none focus:border-secondary focus:shadow-outline-secondary active:bg-secondary ' +
-        'transition ease-in-out duration-150 text-3xl';
 
     return (
-        <div className="flex items-center justify-center space-x-8">
-            <button
+        <div className="flex items-stretch justify-center space-x-8 lg:w-auto">
+            <PrimaryButton
                 type="button"
-                className={buttonClass}
                 onClick={product.onDecrement}
             >
                 -
-            </button>
-            <div className="text-secondary text-3xl font-bold w-40 text-center">
+            </PrimaryButton>
+            <div className="text-secondary text-3xl font-bold shrink-0 text-center">
                 <span>{product.count}</span>
                 <span> {product.text}</span>
             </div>
-            <button
+            <PrimaryButton
                 type="button"
-                className={buttonClass}
                 onClick={product.onIncrement}
             >
                 +
-            </button>
+            </PrimaryButton>
         </div>
 
     );

@@ -24,8 +24,8 @@ export default function Index({products}: any) {
                 <div className="w-full  max-w-7xl">
                     <div className="flex flex-wrap justify-between">
                         <div className="w-full flex flex-col items-center justify-center lg:flex-row lg:justify-start lg:flex-wrap mb-8">
-                            {products?.map((product: any) => (
-                                <div className="flex flex-col shrink-0 w-full lg:w-1/2">
+                            {products?.map((product: any, key: number) => (
+                                <div key={key} className="flex flex-col shrink-0 w-full lg:w-1/2">
                                     <div className="flex justify-center items-center rounded overflow-hidden shadow-lg">
                                         <img className=" h-60 object-cover w-2/5 md:w-1/4 lg:w-1/2"
                                              src={product.image}

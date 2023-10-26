@@ -10,14 +10,12 @@ import InputLabel from '@/Components/common/InputLabel';
 import PrimaryButton from '@/Components/common/PrimaryButton';
 import TextInput from '@/Components/common/TextInput';
 import SecondaryButton from '@/Components/common/SecondaryButton';
-import { User } from '@/types';
+import User  from '@/Types/User';
 import useTypedPage from '@/Hooks/useTypedPage';
 
-interface Props {
-  user: User;
-}
 
-export default function UpdateProfileInformationForm({ user }: Props) {
+
+export default function UpdateProfileInformationForm({ user }: { user: User }) {
   const form = useForm({
     _method: 'PUT',
     name: user.name,

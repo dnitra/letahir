@@ -1,21 +1,44 @@
-import {useState} from "react";
-import {router} from "@inertiajs/react";
+import {useEffect, useState} from "react";
+import {router, useRemember} from "@inertiajs/react";
+import {data} from "autoprefixer";
 
-const useCounter = (initialAmount : number, singular : string, plurals : string[]) => {
-    const [amount, setAmount] = useState(router.restore(singular)?? initialAmount);
+type useCounterResult = {
+    count: number;
+    text: string;
+    onIncrement: () => void;
+    onDecrement: () => void;
+};
 
-    const updateAmount = (newAmount : number) => {
+type useCounterValues = {
+    amount: number;
+    singular: string;
+}
+
+const useCounter = (initialAmount: number, singular: string, plurals: string[]): useCounterResult => {
+    const restoredAmount=router.restore(singular) as number;
+    const [amount, setAmount] = useState<number>(restoredAmount??initialAmount);
+
+    const updateAmount = (newAmount: number): void => {
         if (newAmount >= 1) {
             setAmount(newAmount);
+            router.remember(newAmount, singular)
+            console.log("remembering", newAmount, singular);
         }
-        router.remember(newAmount, singular);
     };
 
-    const getText = (amount : number) => {
+
+    const getText = (amount: number): string => {
         if (amount === 1) return singular;
         if (amount > 1 && amount < 5) return plurals[0];
         return plurals[1];
     };
+
+    useEffect(() => {
+        const restoredData=router.restore(singular) as number;
+        if (restoredData) {
+            router.remember(restoredData, singular)
+        }
+    }, []);
 
     return {
         count: amount,
@@ -24,5 +47,6 @@ const useCounter = (initialAmount : number, singular : string, plurals : string[
         onDecrement: () => updateAmount(amount - 1),
     };
 };
+
 
 export default useCounter;
