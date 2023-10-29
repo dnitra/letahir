@@ -1,6 +1,6 @@
 import User from '@/Types/User';
 
-export type InertiaSharedProps<T = {}> = T & {
+export type InertiaPageWithProps<T = {}> = T & {
   jetstream: {
     canCreateTeams: boolean;
     canManageTwoFactorAuthentication: boolean;

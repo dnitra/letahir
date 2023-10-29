@@ -1,7 +1,7 @@
 import React from 'react';
 import APITokenManager from '@/Pages/API/Partials/APITokenManager';
 import AppLayout from '@/Layouts/AppLayout';
-import { ApiToken } from '@/Types/InertiaSharedProps';
+import { ApiToken } from '@/Types/InertiaPageWithProps';
 
 interface Props {
   tokens: ApiToken[];

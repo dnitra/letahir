@@ -37,16 +37,6 @@ export default function Home() {
     const route = useRoute();
     const page = useTypedPage();
     return (
-        <AppLayout
-            title="O NÁS"
-            renderHeader={() => (
-                <>
-                    <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                        O NÁS
-                    </h2>
-                </>
-            )}
-        >
             <div className="w-full bg-white flex flex-col justify-center items-center">
                 <div className="text-center text-secondary font-light leading-tight w-3/4 mb-6">
                     <h1 className="text-3xl">CO JE LETAHIR</h1>
@@ -97,6 +87,5 @@ export default function Home() {
                 </div>
 
             </div>
-        </AppLayout>
     );
 }

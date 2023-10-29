@@ -8,18 +8,14 @@ import Banner from '@/Components/common/Banner';
 import PrimaryNavigation from "@/Components/containers/pc/PrimaryNavigation";
 import PrimaryNavigationMobile from "@/Components/containers/mobile/PrimaryNavigationMobile";
 
-interface Props {
-  title: string;
-  renderHeader?(): JSX.Element;
-}
+
 
 export default function AppLayout({
-  title,
-  renderHeader,
   children,
-}: PropsWithChildren<Props>) {
+}: PropsWithChildren<{}>) {
   const page = useTypedPage();
   const route = useRoute();
+  const title = page.props.title as string ?? 'Letahir';
   const [showingNavigationDropdown, setShowingNavigationDropdown] =
     useState(false);
 
@@ -30,28 +26,16 @@ export default function AppLayout({
 
   return (
     <div>
-      <Head title={title} />
-
+    <Head title={title} />
       <Banner />
-
       <div className="min-h-screen bg-gray-100">
         <nav className="bg-white border-b border-gray-100">
-            {/*big sign "LETAHIR" then horizontal white divider, then navlingks*/}
             <PrimaryNavigation page={page} logout={logout} setShowingNavigationDropdown={setShowingNavigationDropdown} showingNavigationDropdown={showingNavigationDropdown}  />
             <PrimaryNavigationMobile page={page} logout={logout} setShowingNavigationDropdown={setShowingNavigationDropdown} showingNavigationDropdown={showingNavigationDropdown} />
         </nav>
 
-        {/* <!-- Page Heading --> */}
-        {renderHeader ? (
-          <header className="bg-white shadow">
-            <div className="flex flex-col justify-center items-center max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-              {renderHeader()}
-            </div>
-          </header>
-        ) : null}
-
         {/* <!-- Page Content --> */}
-        <main>{children}</main>
+        <main className="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">{children}</main>
       </div>
     </div>
   );

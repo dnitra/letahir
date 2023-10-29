@@ -9,7 +9,7 @@ import InputError from '@/Components/common/InputError';
 import PrimaryButton from '@/Components/common/PrimaryButton';
 import TextInput from '@/Components/common/TextInput';
 import SecondaryButton from '@/Components/common/SecondaryButton';
-import { Session } from '@/Types/InertiaSharedProps';
+import { Session } from '@/Types/InertiaPageWithProps';
 
 interface Props {
   sessions: Session[];

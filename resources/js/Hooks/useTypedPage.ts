@@ -1,6 +1,6 @@
 import { usePage } from '@inertiajs/react';
-import { InertiaSharedProps } from '@/Types/InertiaSharedProps';
+import { InertiaPageWithProps } from '@/Types/InertiaPageWithProps';
 
 export default function useTypedPage<T = {}>() {
-  return usePage<InertiaSharedProps<T>>();
+  return usePage<InertiaPageWithProps<T>>();
 }

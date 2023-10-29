@@ -7,16 +7,6 @@ import {Link} from "@inertiajs/react";
 export default function Show({ product }: any) {
 
     return (
-        <AppLayout title={product.title}
-            renderHeader={() => (
-                <>
-                    <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                        Úklidové služby - {product.title}
-                    </h2>
-                </>
-            )}
-
-        >
             <div className="w-full bg-white flex justify-center items-center" >
                 <div className="bg-white flex justify-center items-center w-3/4">
                     <div className="text-center text-secondary font-light leading-tight flex flex-col justify-center items-center gap-6">
@@ -75,7 +65,5 @@ export default function Show({ product }: any) {
                     </div>
                 </div>
             </div>
-
-        </AppLayout>
     )
 }

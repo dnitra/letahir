@@ -19,16 +19,7 @@ export default function Home() {
     const page = useTypedPage();
 
   return (
-    <AppLayout
-      title="Home"
-      renderHeader={() => (
-          <>
-              <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                  Home
-              </h2>
-          </>
-    )}
-    >
+      <>
         <div className="w-full bg-white flex justify-center items-center">
             <div className="text-center text-secondary font-light leading-tight">
                 <h1 className="text-3xl">Čistota a pokoj vaší domácnosti</h1>
@@ -58,6 +49,6 @@ export default function Home() {
                 </div>
             </div>
         </div>
-    </AppLayout>
+      </>
   );
 }

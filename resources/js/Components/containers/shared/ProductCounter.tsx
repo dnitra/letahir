@@ -12,18 +12,20 @@ interface Product {
 const CounterButton = ({ product }: { product: Product }) => {
 
     return (
-        <div className="flex items-stretch justify-center space-x-8 lg:w-auto">
+        <div className="flex w-full items-stretch justify-between" >
             <PrimaryButton
+                className="text-3xl"
                 type="button"
                 onClick={product.onDecrement}
             >
                 -
             </PrimaryButton>
-            <div className="text-secondary text-3xl font-bold shrink-0 text-center">
+            <div className="text-secondary text-xl font-bold shrink-0 text-center">
                 <span>{product.count}</span>
                 <span> {product.text}</span>
             </div>
             <PrimaryButton
+                className="text-3xl"
                 type="button"
                 onClick={product.onIncrement}
             >
