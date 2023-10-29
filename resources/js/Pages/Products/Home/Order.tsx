@@ -39,6 +39,7 @@ interface OrderData extends GenericFormData {
     zip: string;
     note: string;
     price: number;
+    minPrice: number;
 }
 
 const initialOrderData: OrderData = {
@@ -50,6 +51,13 @@ const initialOrderData: OrderData = {
     time: '08:00',
     email: '',
     phone: '',
+    street: '',
+    streetNumber: '',
+    city: '',
+    zip: '',
+    note: '',
+    price: 900,
+    minPrice: 900
 }
 
 
@@ -58,18 +66,18 @@ export default function Order({product}: Props) {
 
     const regularityOptions : Option[] = [
         { label: 'Jednorázově', value: RegularityType.SINGLETIME },
-        { label: 'Týdně', value: RegularityType.WEEKLY },
-        { label: 'Dvakrát měsíčně', value: RegularityType.BIWEEKLY },
-        { label: 'Měsíčně', value: RegularityType.MONTHLY },
+        { label: 'Týdně', value: RegularityType.WEEKLY, priceDivisor: 1.2},
+        { label: 'Dvakrát měsíčně', value: RegularityType.BIWEEKLY, priceDivisor: 1.15},
+        { label: 'Měsíčně', value: RegularityType.MONTHLY , priceDivisor: 1.1},
     ];
 
     const propertyTypeOptions : Option[] = [
         { label: 'Byt', value: PropertyType.Flat },
-        { label: 'Dům', value: PropertyType.House },
+        { label: 'Dům', value: PropertyType.House, priceMultiplier: 1.2},
     ];
 
-    const rooms = useCounter(1, 'pokoj', ['pokoje', 'pokojů']);
-    const bathrooms = useCounter(1, 'koupelna', ['koupelny', 'koupelen']);
+    const rooms = useCounter(1, 'pokoj', ['pokoje', 'pokojů'], 350);
+    const bathrooms = useCounter(1, 'koupelna', ['koupelny', 'koupelen'],400);
     const times = useTimer(8,15,0,30)
     const user  = useTypedPage().props.auth
     // use form inertiajs
@@ -84,15 +92,23 @@ export default function Order({product}: Props) {
     }
 
     useEffect(() => {
+        const totalPrice = rooms.total + bathrooms.total
+        const minPrice = form.data.minPrice || (initialOrderData.minPrice || 0);
+
         form.setData({
             ...form.data,
             rooms: rooms.count,
-            bathrooms: bathrooms.count
+            bathrooms: bathrooms.count,
+            price: Math.floor(totalPrice < minPrice ? minPrice : totalPrice)
+
         });
     }, [rooms.count, bathrooms.count]);
 
     return (
             <>
+                <div className="fixed top-1/2 left-10 transform -translate-y-1/2 text-2xl text-gray-700 bg-white p-10 rounded-lg shadow-lg">
+                    Celkem cena: {form.data.price || 'N/A'} Kč
+                </div>
                 <FormSection
                     title={'Objednávka'}
                     description={'Objednejte si úklid pro svou domácnost'}
@@ -119,7 +135,6 @@ export default function Order({product}: Props) {
                         <SelectInput options={propertyTypeOptions} label={'propertyType'} form={form} />
                     </div>
 
-                {/*    termin + cas*/}
                     <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
                         <InputLabel htmlFor={'Datum'} value={'Datum'} />
                         <input
@@ -152,7 +167,6 @@ export default function Order({product}: Props) {
                             <PrimaryButton
                                 onClick={(event) => {
                                     event.preventDefault()
-                                    console.log(form.data)
                                 }}
                             >
                                 show data

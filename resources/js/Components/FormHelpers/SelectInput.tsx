@@ -66,7 +66,9 @@ const SelectInput: React.FC<Props<any>> = ({
         };
     }, [state.isOpen, options]);
 
-    const handleSelect = (value: Option['value']) => {
+
+    const handleSelect = (option: Option) => {
+        const value = option.value;
         dispatch({ type: ActionType.SELECT, value });
         form.setData({
             ...form.data,
@@ -85,13 +87,13 @@ const SelectInput: React.FC<Props<any>> = ({
             </div>
             {state.isOpen && (
                 <ul
-                    className="absolute mt-2 w-full max-h-40 overflow-y-auto bg-white border rounded border-gray-300 shadow-lg"
+                    className="absolute mt-2 w-full max-h-40 overflow-y-auto bg-white border rounded border-gray-300 shadow-lg z-50" // Set a high z-index value, e.g., z-50
                     style={{ top: selectRef.current?.offsetHeight }}
                 >
                     {options.map((option) => (
                         <li
                             key={option.value}
-                            onClick={() => handleSelect(option.value)}
+                            onClick={() => handleSelect(option)}
                             className={`w-full px-4 py-2 cursor-pointer ${
                                 state.selectedValue === option.value ? 'bg-gray-200' : 'hover:bg-gray-100'
                             }`}

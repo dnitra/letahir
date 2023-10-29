@@ -3,6 +3,9 @@ export interface Option {
     //value can be string, num, enum, etc.
     value: any;
     selected?: boolean;
+    priceDivisor?: number;
+    price?: number;
+    priceMultiplier?: number;
 }
 
 interface selectInputProps {

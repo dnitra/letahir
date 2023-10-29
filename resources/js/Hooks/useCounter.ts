@@ -5,6 +5,8 @@ import {data} from "autoprefixer";
 type useCounterResult = {
     count: number;
     text: string;
+    price?: number;
+    total: number;
     onIncrement: () => void;
     onDecrement: () => void;
 };
@@ -14,7 +16,7 @@ type useCounterValues = {
     singular: string;
 }
 
-const useCounter = (initialAmount: number, singular: string, plurals: string[]): useCounterResult => {
+const useCounter = (initialAmount: number, singular: string, plurals: string[], price?: number): useCounterResult => {
     const restoredAmount=router.restore(singular) as number;
     const [amount, setAmount] = useState<number>(restoredAmount??initialAmount);
 
@@ -22,7 +24,6 @@ const useCounter = (initialAmount: number, singular: string, plurals: string[]):
         if (newAmount >= 1) {
             setAmount(newAmount);
             router.remember(newAmount, singular)
-            console.log("remembering", newAmount, singular);
         }
     };
 
@@ -43,6 +44,8 @@ const useCounter = (initialAmount: number, singular: string, plurals: string[]):
     return {
         count: amount,
         text: getText(amount),
+        price: price,
+        total: Math.floor(price ? price * amount : 0),
         onIncrement: () => updateAmount(amount + 1),
         onDecrement: () => updateAmount(amount - 1),
     };
