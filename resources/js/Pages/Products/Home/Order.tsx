@@ -20,6 +20,9 @@ import {DATE} from "@/Types/Date";
 import TimeInput from "@/Components/FormHelpers/TimeInput";
 import timeInputSettings from "@/Enums/TimeInputSettings";
 import TimeInputSettings from "@/Enums/TimeInputSettings";
+import ContactForm from "@/Components/FormHelpers/ContactForm";
+import FormInput from "@/Types/FormInput";
+import FormSummary from "@/Components/FormHelpers/FormSummary";
 
 
 
@@ -91,6 +94,25 @@ const products: HomeCleaningProduct = {
     },
 };
 
+const formInfo: FormInput[] = [
+    {
+        title: "Počet místností:",
+        label: "rooms",
+    },
+    {
+        title: "Počet koupelen:",
+        label: "bathrooms",
+    },
+    {
+        title: "Typ nemovitosti:",
+        label: "propertyType",
+    },
+    {
+        title: "Celkem cena:",
+        label: "price",
+    },
+];
+
 
 
 export default function Order({product}: Props) {
@@ -108,7 +130,7 @@ export default function Order({product}: Props) {
     ];
 
     const roomOptions = {
-        amount: 1,
+        value: 1,
         singular: 'pokoj',
         plurals: ['pokoje', 'pokojů'],
         price: 350,
@@ -116,7 +138,7 @@ export default function Order({product}: Props) {
         title: 'Počet místností'
     }
     const bathroomOptions = {
-        amount: 1,
+        value: 1,
         singular: 'koupelna',
         plurals: ['koupelny', 'koupelen'],
         price: 400,
@@ -146,191 +168,64 @@ export default function Order({product}: Props) {
     }, [])
 
     return (
-            <>
-                <div className=" fixed top-1/2 right-10 transform -translate-y-1/2 text-gray-700 bg-white p-5 rounded-lg shadow-lg z-50 lg:block">
-                    <h2>Shrnutí objednávky:</h2>
-                    <div className="flex flex-col gap-2">
-                        <div className="flex justify-between">
-                            <div>Počet místností:</div>
-                            <div>{form.data.rooms}</div>
-                        </div>
-                        <div className="flex justify-between">
-                            <div>Počet koupelen:</div>
-                            <div>{form.data.bathrooms}</div>
-                        </div>
-                        <div className="flex justify-between">
-                            <div>Typ nemovitosti:</div>
-                            <div>{form.data.propertyType}</div>
-                        </div>
-                        <div className="flex justify-between">
-                            <div>Celkem cena:</div>
-                            <div>{form.data.price || 0} Kč</div>
+            <div className={'grid col-span-1 md:grid-cols-7 gap-8'}>
+                <section className={'col-span-1 md:col-span-5'}>
+                    <div className={'mb-6'}>
+                        <FormSection
+                            title={'Objednávka'}
+                            description={'Objednejte si úklid pro svou domácnost'}
+                            onSubmit={handleSubmit}
+                        >
+
+                            <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
+                                <InputLabel htmlFor={'rooms'} value={'Počet místností'} />
+                                <ProductCounter
+                                    options={roomOptions} form={form}
+                                />
+                                <ProductCounter
+                                    options={bathroomOptions} form={form}
+                                />
+                            </div>
+                            <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
+                                <InputLabel htmlFor={'regularity'} value={'Pravidelnost'} />
+                                <SelectInput options={regularityOptions} label={'regularity'} form={form} />
+                            </div>
+
+                            <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
+                                <InputLabel htmlFor={'propertyType'} value={'Typ nemovitosti'} />
+                                <SelectInput options={propertyTypeOptions} label={'propertyType'} form={form} />
+                            </div>
+
+                            <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
+                                <InputLabel htmlFor={'date'} value={'Datum'} />
+                                <input
+                                    id="date"
+                                    type="date"
+                                    className="block w-full mt-1"
+                                    value={form.data.date.split('.').reverse().join('-')}
+                                    onChange={(event) => {
+                                        const formattedDate : DATE = event.target.value.split('-').reverse().join('.') as DATE
+                                        form.setData('date', formattedDate)
+                                    }}
+                                />
+                            </div>
+                            <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
+                                <InputLabel htmlFor={'time'} value={'Čas'} />
+                                <TimeInput form={form} label={'time'}  timeInputSetting={timeInputSettings} />
+                            </div>
+                        </FormSection>
+                    </div>
+                    <ContactForm form={form} handleSubmit={handleSubmit} />
+                </section>
+
+                <div className="col-span-1 md:col-span-2">
+                    <div className="sticky top-5">
+                        <div className="bg-white p-5 rounded-lg shadow-lg z-50">
+                            <h2>Shrnutí objednávky:</h2>
+                            <FormSummary form={form} formInfo={formInfo} />
                         </div>
                     </div>
                 </div>
-                <FormSection
-                    title={'Objednávka'}
-                    description={'Objednejte si úklid pro svou domácnost'}
-                    onSubmit={handleSubmit}
-
-                >
-
-                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'rooms'} value={'Počet místností'} />
-                        <ProductCounter
-                            options={roomOptions} form={form}
-                        />
-                        <ProductCounter
-                            options={bathroomOptions} form={form}
-                        />
-                    </div>
-                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'regularity'} value={'Pravidelnost'} />
-                        <SelectInput options={regularityOptions} label={'regularity'} form={form} />
-                    </div>
-
-                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'propertyType'} value={'Typ nemovitosti'} />
-                        <SelectInput options={propertyTypeOptions} label={'propertyType'} form={form} />
-                    </div>
-
-                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'date'} value={'Datum'} />
-                        <input
-                            id="date"
-                            type="date"
-                            className="block w-full mt-1"
-                            value={form.data.date.split('.').reverse().join('-')}
-                            onChange={(event) => {
-                                const formattedDate : DATE = event.target.value.split('-').reverse().join('.') as DATE
-                                form.setData('date', formattedDate)
-                            }}
-                        />
-                    </div>
-                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'time'} value={'Čas'} />
-                        <TimeInput form={form} label={'time'}  timeInputSetting={timeInputSettings} />
-                    </div>
-
-                </FormSection>
-
-                <FormSection
-                    title={'Kontaktní údaje'}
-                    description={'Vyplňte kontaktní údaje'}
-                    onSubmit={handleSubmit}
-                    renderActions={() => (
-                        <>
-                            <ActionMessage on={form.recentlySuccessful} className="mr-3">
-                                Objednáno
-                            </ActionMessage>
-
-                            <PrimaryButton
-                                onClick={(event) => {
-                                    event.preventDefault()
-                                    console.log(form.data)
-                                }}
-                            >
-                                show data
-                            </PrimaryButton>
-                            <PrimaryButton
-                                className={classNames({ 'opacity-25': form.processing })}
-                                disabled={form.processing}
-                            >
-                                Objednat
-                            </PrimaryButton>
-
-                        </>
-                    )}
-                >
-                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'email'} value={'Email'} />
-                        <input
-                            id="email"
-                            type="email"
-                            className="block w-full mt-1"
-                            value={form.data.email}
-                            onChange={(event) => {
-                                form.setData('email', event.target.value)
-                            }}
-                        />
-                    </div>
-                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'phone'} value={'Telefon'} />
-                        <input
-                            id="phone"
-                            type="tel"
-                            className="block w-full mt-1"
-                            value={form.data.phone}
-                            onChange={(event) => {
-                                form.setData('phone', event.target.value)
-                            }}
-                        />
-                    </div>
-
-
-                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'Ulice'} value={'Ulice'} />
-                        <input
-                            id="street"
-                            type="text"
-                            className="block w-full mt-1"
-                            value={form.data.street}
-                            onChange={(event) => {
-                                form.setData('street', event.target.value)
-
-                            }}
-                        />
-                    </div>
-                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'Číslo popisné'} value={'Číslo popisné'} />
-                        <input
-                            id="streetNumber"
-                            type="text"
-                            className="block w-full mt-1"
-                            value={form.data.streetNumber}
-                            onChange={(event) => {
-                                form.setData('streetNumber', event.target.value)
-                            }}
-                        />
-                    </div>
-                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'Město'} value={'Město'} />
-                        <input
-                            id="city"
-                            type="text"
-                            className="block w-full mt-1"
-                            value={form.data.city}
-                            onChange={(event) => {
-                                form.setData('city', event.target.value)
-                            }}
-                        />
-                    </div>
-                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'PSČ'} value={'PSČ'} />
-                        <input
-                            id="zip"
-                            type="text"
-                            className="block w-full mt-1"
-                            value={form.data.zip}
-                            onChange={(event) => {
-                                form.setData('zip', event.target.value)
-                            }}
-                        />
-                    </div>
-                {/*    poznamka*/}
-                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'Poznámka'} value={'Poznámka'} />
-                        <textarea
-                            id="note"
-                            className="block w-full mt-1"
-                            value={form.data.note}
-                            onChange={(event) => {
-                                form.setData('note', event.target.value)
-                            }}
-                        />
-                    </div>
-
-                </FormSection>
-                </>
+            </div>
     );
 }

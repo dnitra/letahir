@@ -1,12 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import PrimaryButton from "@/Components/common/PrimaryButton";
 import {InertiaFormProps} from "@inertiajs/react/types/useForm";
 import {GenericFormData} from "@/Types/GenericFormData";
-import useCounter from "@/Hooks/useCounter";
 
 
 interface Product {
-    amount: number;
+    value: number;
     singular: string;
     plurals: string[];
     price: number;
