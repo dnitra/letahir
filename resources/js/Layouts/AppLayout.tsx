@@ -33,8 +33,6 @@ export default function AppLayout({
             <PrimaryNavigation page={page} logout={logout} setShowingNavigationDropdown={setShowingNavigationDropdown} showingNavigationDropdown={showingNavigationDropdown}  />
             <PrimaryNavigationMobile page={page} logout={logout} setShowingNavigationDropdown={setShowingNavigationDropdown} showingNavigationDropdown={showingNavigationDropdown} />
         </nav>
-
-        {/* <!-- Page Content --> */}
         <main className="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">{children}</main>
       </div>
     </div>

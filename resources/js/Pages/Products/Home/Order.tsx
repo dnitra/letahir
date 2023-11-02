@@ -1,12 +1,11 @@
 import AppLayout from "@/Layouts/AppLayout";
 import React, {useEffect} from "react";
-import useCounter from "@/Hooks/useCounter";
 import ProductCounter from "@/Components/containers/shared/ProductCounter";
 import {useForm} from "@inertiajs/react";
 import PropertyType from "@/Enums/PropertyType";
 import useTypedPage from "@/Hooks/useTypedPage";
 import RegularityType from "@/Enums/RegularityType";
-import {DateTime} from "@/Types/DateTime";
+import {Time} from "@/Types/Time";
 import PrimaryButton from "@/Components/common/PrimaryButton";
 import FormSection from "@/Components/common/FormSection";
 import route from "ziggy-js";
@@ -15,8 +14,12 @@ import classNames from "classnames";
 import InputLabel from "@/Components/common/InputLabel";
 import SelectInput from "@/Components/FormHelpers/SelectInput";
 import {Option} from "@/Types/Select";
-import {GenericFormData} from "@/Types/GenericFormData";
 import useTimer from "@/Hooks/useTimer";
+import {Nullable} from "@/Types/Nullable";
+import {DATE} from "@/Types/Date";
+import TimeInput from "@/Components/FormHelpers/TimeInput";
+import timeInputSettings from "@/Enums/TimeInputSettings";
+import TimeInputSettings from "@/Enums/TimeInputSettings";
 
 
 
@@ -24,13 +27,13 @@ interface Props {
     product: string;
 }
 
-interface OrderData extends GenericFormData {
+interface OrderData {
     rooms: number;
     bathrooms: number;
     propertyType: PropertyType;
     regularity: RegularityType;
-    date: DateTime;
-    time: DateTime;
+    date: DATE |''
+    time: Time;
     email: string;
     phone: string;
     street: string;
@@ -39,7 +42,6 @@ interface OrderData extends GenericFormData {
     zip: string;
     note: string;
     price: number;
-    minPrice: number;
 }
 
 const initialOrderData: OrderData = {
@@ -47,7 +49,7 @@ const initialOrderData: OrderData = {
     bathrooms: 1,
     propertyType: PropertyType.Flat,
     regularity: RegularityType.SINGLETIME,
-    date: '',
+    date:'',
     time: '08:00',
     email: '',
     phone: '',
@@ -57,8 +59,37 @@ const initialOrderData: OrderData = {
     zip: '',
     note: '',
     price: 900,
-    minPrice: 900
 }
+
+interface HomeCleaningProduct {
+    [key: string]: {
+        [key: string] : number | string | {}
+        multipliers: {
+            [key:string] :{
+                [key:string] : number
+            }
+        }
+    }
+}
+
+const products: HomeCleaningProduct = {
+    homeCleaning: {
+        name: 'Home Cleaning',
+        minPrice: 900,
+        roomPrice: 350,
+        bathroomPrice: 400,
+        multipliers: {
+            regularity:
+                {
+                    singleTime: 1.0,
+                    weekly: 0.9,
+                    biweekly: 0.85,
+                    monthly: 0.8,
+                },
+
+        },
+    },
+};
 
 
 
@@ -66,9 +97,9 @@ export default function Order({product}: Props) {
 
     const regularityOptions : Option[] = [
         { label: 'Jednorázově', value: RegularityType.SINGLETIME },
-        { label: 'Týdně', value: RegularityType.WEEKLY, priceDivisor: 1.2},
-        { label: 'Dvakrát měsíčně', value: RegularityType.BIWEEKLY, priceDivisor: 1.15},
-        { label: 'Měsíčně', value: RegularityType.MONTHLY , priceDivisor: 1.1},
+        { label: 'Týdně', value: RegularityType.WEEKLY, priceMultiplier: 0.8},
+        { label: 'Dvakrát měsíčně', value: RegularityType.BIWEEKLY, priceMultiplier: 0.85},
+        { label: 'Měsíčně', value: RegularityType.MONTHLY , priceMultiplier: 0.9},
     ];
 
     const propertyTypeOptions : Option[] = [
@@ -76,13 +107,32 @@ export default function Order({product}: Props) {
         { label: 'Dům', value: PropertyType.House, priceMultiplier: 1.2},
     ];
 
-    const rooms = useCounter(1, 'pokoj', ['pokoje', 'pokojů'], 350);
-    const bathrooms = useCounter(1, 'koupelna', ['koupelny', 'koupelen'],400);
-    const times = useTimer(8,15,0,30)
+    const roomOptions = {
+        amount: 1,
+        singular: 'pokoj',
+        plurals: ['pokoje', 'pokojů'],
+        price: 350,
+        label: 'rooms',
+        title: 'Počet místností'
+    }
+    const bathroomOptions = {
+        amount: 1,
+        singular: 'koupelna',
+        plurals: ['koupelny', 'koupelen'],
+        price: 400,
+        label: 'bathrooms',
+        title: 'Počet koupelen'
+    }
+    const timeInputSettings : TimeInputSettings = {
+        minMinutes: 0,
+        minHour: 8,
+        maxHour: 16,
+        maxMinutes: 30,
+        stepMinutes: 30,
+    }
+
     const user  = useTypedPage().props.auth
-    // use form inertiajs
-    // rooms, bathrooms, kitchenType (kuchun or +kk), propertyType (house or apartment), regularity(one-time, every week, once a month), date, time, name, email, phone, address, note, pric
-    const form = useForm('home',initialOrderData)
+    const form = useForm(initialOrderData)
 
     const handleSubmit = ()=>{
         form.post(route('order.post'),{
@@ -92,22 +142,31 @@ export default function Order({product}: Props) {
     }
 
     useEffect(() => {
-        const totalPrice = rooms.total + bathrooms.total
-        const minPrice = form.data.minPrice || (initialOrderData.minPrice || 0);
 
-        form.setData({
-            ...form.data,
-            rooms: rooms.count,
-            bathrooms: bathrooms.count,
-            price: Math.floor(totalPrice < minPrice ? minPrice : totalPrice)
-
-        });
-    }, [rooms.count, bathrooms.count]);
+    }, [])
 
     return (
             <>
-                <div className="fixed top-1/2 left-10 transform -translate-y-1/2 text-2xl text-gray-700 bg-white p-10 rounded-lg shadow-lg">
-                    Celkem cena: {form.data.price || 'N/A'} Kč
+                <div className=" fixed top-1/2 right-10 transform -translate-y-1/2 text-gray-700 bg-white p-5 rounded-lg shadow-lg z-50 lg:block">
+                    <h2>Shrnutí objednávky:</h2>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex justify-between">
+                            <div>Počet místností:</div>
+                            <div>{form.data.rooms}</div>
+                        </div>
+                        <div className="flex justify-between">
+                            <div>Počet koupelen:</div>
+                            <div>{form.data.bathrooms}</div>
+                        </div>
+                        <div className="flex justify-between">
+                            <div>Typ nemovitosti:</div>
+                            <div>{form.data.propertyType}</div>
+                        </div>
+                        <div className="flex justify-between">
+                            <div>Celkem cena:</div>
+                            <div>{form.data.price || 0} Kč</div>
+                        </div>
+                    </div>
                 </div>
                 <FormSection
                     title={'Objednávka'}
@@ -116,40 +175,41 @@ export default function Order({product}: Props) {
 
                 >
 
-                    <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
+                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                         <InputLabel htmlFor={'rooms'} value={'Počet místností'} />
                         <ProductCounter
-                            product={rooms}
+                            options={roomOptions} form={form}
                         />
                         <ProductCounter
-                            product={bathrooms}
+                            options={bathroomOptions} form={form}
                         />
                     </div>
-                    <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'Pravidelnost'} value={'Pravidelnost'} />
+                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
+                        <InputLabel htmlFor={'regularity'} value={'Pravidelnost'} />
                         <SelectInput options={regularityOptions} label={'regularity'} form={form} />
                     </div>
 
-                    <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'Typ nemovitosti'} value={'Typ nemovitosti'} />
+                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
+                        <InputLabel htmlFor={'propertyType'} value={'Typ nemovitosti'} />
                         <SelectInput options={propertyTypeOptions} label={'propertyType'} form={form} />
                     </div>
 
-                    <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'Datum'} value={'Datum'} />
+                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
+                        <InputLabel htmlFor={'date'} value={'Datum'} />
                         <input
                             id="date"
                             type="date"
                             className="block w-full mt-1"
-                            value={form.data.date}
+                            value={form.data.date.split('.').reverse().join('-')}
                             onChange={(event) => {
-                                form.setData('date', event.target.value)
+                                const formattedDate : DATE = event.target.value.split('-').reverse().join('.') as DATE
+                                form.setData('date', formattedDate)
                             }}
                         />
                     </div>
-                    <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
-                        <InputLabel htmlFor={'Čas'} value={'Čas'} />
-                        <SelectInput label={'time'} form={form} options={times} />
+                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
+                        <InputLabel htmlFor={'time'} value={'Čas'} />
+                        <TimeInput form={form} label={'time'}  timeInputSetting={timeInputSettings} />
                     </div>
 
                 </FormSection>
@@ -167,6 +227,7 @@ export default function Order({product}: Props) {
                             <PrimaryButton
                                 onClick={(event) => {
                                     event.preventDefault()
+                                    console.log(form.data)
                                 }}
                             >
                                 show data
@@ -181,7 +242,7 @@ export default function Order({product}: Props) {
                         </>
                     )}
                 >
-                    <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
+                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                         <InputLabel htmlFor={'email'} value={'Email'} />
                         <input
                             id="email"
@@ -193,7 +254,7 @@ export default function Order({product}: Props) {
                             }}
                         />
                     </div>
-                    <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
+                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                         <InputLabel htmlFor={'phone'} value={'Telefon'} />
                         <input
                             id="phone"
@@ -207,7 +268,7 @@ export default function Order({product}: Props) {
                     </div>
 
 
-                    <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
+                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                         <InputLabel htmlFor={'Ulice'} value={'Ulice'} />
                         <input
                             id="street"
@@ -220,7 +281,7 @@ export default function Order({product}: Props) {
                             }}
                         />
                     </div>
-                    <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
+                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                         <InputLabel htmlFor={'Číslo popisné'} value={'Číslo popisné'} />
                         <input
                             id="streetNumber"
@@ -232,7 +293,7 @@ export default function Order({product}: Props) {
                             }}
                         />
                     </div>
-                    <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
+                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                         <InputLabel htmlFor={'Město'} value={'Město'} />
                         <input
                             id="city"
@@ -244,7 +305,7 @@ export default function Order({product}: Props) {
                             }}
                         />
                     </div>
-                    <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
+                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                         <InputLabel htmlFor={'PSČ'} value={'PSČ'} />
                         <input
                             id="zip"
@@ -257,7 +318,7 @@ export default function Order({product}: Props) {
                         />
                     </div>
                 {/*    poznamka*/}
-                    <div className="col-span-5 flex flex-col gap-2 lg:col-span-3">
+                    <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                         <InputLabel htmlFor={'Poznámka'} value={'Poznámka'} />
                         <textarea
                             id="note"
@@ -268,7 +329,6 @@ export default function Order({product}: Props) {
                             }}
                         />
                     </div>
-
 
                 </FormSection>
                 </>

@@ -1,6 +1,6 @@
 import {Role} from "@/Types/Role";
 import {Nullable} from "@/Types/Nullable";
-import {DateTime} from "@/Types/DateTime";
+import {Time} from "@/Types/Time";
 import {Permission} from "@/Enums/Permission";
 
 interface User {
@@ -10,9 +10,9 @@ interface User {
     profile_photo_path: string|undefined;
     profile_photo_url:  string|undefined;
     two_factor_enabled: boolean;
-    email_verified_at: Nullable<DateTime>;
-    created_at: DateTime;
-    updated_at: DateTime;
+    email_verified_at: Nullable<Time>;
+    created_at: Time;
+    updated_at: Time;
     roles: Role[];
     permissions: Permission[];
 }

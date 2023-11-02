@@ -1,5 +1,5 @@
 
-import {DateTime} from "@/Types/DateTime";
+import {Time} from "@/Types/Time";
 interface Session {
     id: number;
     ip_address: string;
@@ -9,7 +9,7 @@ interface Session {
         platform: string;
         browser: string;
     };
-    last_active: DateTime;
+    last_active: Time;
 }
 
 export default Session;

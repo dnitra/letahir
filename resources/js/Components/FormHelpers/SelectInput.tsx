@@ -77,7 +77,7 @@ const SelectInput: React.FC<Props<any>> = ({
     }
 
     return (
-        <div className="w-full relative inline-block text-gray-700" ref={selectRef}>
+        <div className="w-full relative inline-block text-gray-700" id='pravidelnost' ref={selectRef}>
             <div
                 className={`p-2 bg-white border rounded ${state.isOpen ? 'border-gray-600' : 'border-gray-300'} cursor-pointer w-full flex justify-between items-center`}
                 onClick={() => dispatch({ type: ActionType.OPEN })}
@@ -87,7 +87,7 @@ const SelectInput: React.FC<Props<any>> = ({
             </div>
             {state.isOpen && (
                 <ul
-                    className="absolute mt-2 w-full max-h-40 overflow-y-auto bg-white border rounded border-gray-300 shadow-lg z-50" // Set a high z-index value, e.g., z-50
+                    className="absolute mt-2 w-full max-h-40 overflow-y-auto bg-white border rounded border-gray-300 shadow-lg z-30"
                     style={{ top: selectRef.current?.offsetHeight }}
                 >
                     {options.map((option) => (
