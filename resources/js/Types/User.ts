@@ -15,6 +15,7 @@ interface User {
     updated_at: Time;
     roles: Role[];
     permissions: Permission[];
+
 }
 
 export default User;

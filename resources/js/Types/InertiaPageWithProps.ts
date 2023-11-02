@@ -14,7 +14,7 @@ export type InertiaPageWithProps<T = {}> = T & {
     managesProfilePhotos: boolean;
     hasEmailVerification: boolean;
   };
-  auth: User;
+  auth: {user: User};
   errorBags: any;
   errors: any;
 };

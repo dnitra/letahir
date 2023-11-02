@@ -6,8 +6,9 @@ import classNames from "classnames";
 import React from "react";
 import route from "ziggy-js";
 import Auth from "@/Components/containers/pc/Auth";
+import NavigationProps from "@/Types/NavigationProps";
 
-export default function PrimaryNavigation({page, logout, setShowingNavigationDropdown, showingNavigationDropdown}: {page: any, logout: any, setShowingNavigationDropdown: any, showingNavigationDropdown: any}) {
+export default function PrimaryNavigation({navLinks, page, logout, setShowingNavigationDropdown, showingNavigationDropdown}: NavigationProps ) {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -73,24 +74,15 @@ export default function PrimaryNavigation({page, logout, setShowingNavigationDro
 
                     {/* Navigation Items (centered) */}
                     <div className="hidden sm:flex justify-center items-center w-full space-x-4">
-                        <NavLink
-                            href={route('home')}
-                            active={route().current('Home')}
-                        >
-                            Home
-                        </NavLink>
-                        <NavLink
-                            href={route('about')}
-                            active={route().current('about')}
-                        >
-                            About
-                        </NavLink>
-                        <NavLink
-                            href={route('products.list')}
-                            active={route().current('products.list')}
-                        >
-                            Úklidové služby
-                        </NavLink>
+                        {navLinks.map((link, index) => (
+                            <NavLink
+                                key={index}
+                                href={route(link.routeName)}
+                                active={route().current(link.routeName)}
+                            >
+                                {link.label}
+                            </NavLink>
+                        ))}
                     </div>
 
                 </div>
