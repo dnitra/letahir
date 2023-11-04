@@ -4,6 +4,7 @@ import classNames from "classnames";
 import InputLabel from "@/Components/common/InputLabel";
 import FormSection from "@/Components/common/FormSection";
 import React, {PropsWithChildren} from "react";
+import FormErrorMessage from "@/Components/FormHelpers/FormErrorMessage";
 
 interface Props {
     form: any;
@@ -19,24 +20,14 @@ export default function ContactForm({handleSubmit,form}:Props) : JSX.Element {
             renderActions={() => (
                 <>
                     <ActionMessage on={form.recentlySuccessful} className="mr-3">
-                        Objednáno
+                        Odesláno
                     </ActionMessage>
-
-                    <PrimaryButton
-                        onClick={(event) => {
-                            event.preventDefault()
-                            console.log(form.data)
-                        }}
-                    >
-                        show data
-                    </PrimaryButton>
                     <PrimaryButton
                         className={classNames({ 'opacity-25': form.processing })}
                         disabled={form.processing}
                     >
-                        Objednat
+                        Odeslat
                     </PrimaryButton>
-
                 </>
             )}
         >
@@ -52,6 +43,7 @@ export default function ContactForm({handleSubmit,form}:Props) : JSX.Element {
                     }}
                     autoComplete={'email'}
                 />
+                <FormErrorMessage error={form.errors.email} />
             </div>
             <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                 <InputLabel htmlFor={'phone'} value={'Telefon'} />
@@ -65,6 +57,7 @@ export default function ContactForm({handleSubmit,form}:Props) : JSX.Element {
                     }}
                     autoComplete={'tel'}
                 />
+                <FormErrorMessage error={form.errors.phone} />
             </div>
 
 
@@ -81,6 +74,7 @@ export default function ContactForm({handleSubmit,form}:Props) : JSX.Element {
                     }}
                     autoComplete={'street-address'}
                 />
+                <FormErrorMessage error={form.errors.street} />
             </div>
 
             <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
@@ -95,6 +89,7 @@ export default function ContactForm({handleSubmit,form}:Props) : JSX.Element {
                     }}
                     autoComplete={'address-level2'}
                 />
+                <FormErrorMessage error={form.errors.city} />
             </div>
             <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                 <InputLabel htmlFor={'PSČ'} value={'PSČ'} />
@@ -108,6 +103,7 @@ export default function ContactForm({handleSubmit,form}:Props) : JSX.Element {
                     }}
                     autoComplete={'postal-code'}
                 />
+                <FormErrorMessage error={form.errors.zip} />
             </div>
             {/*    poznamka*/}
             <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">

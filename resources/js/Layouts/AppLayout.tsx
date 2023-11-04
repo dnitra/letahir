@@ -1,6 +1,6 @@
 import { router } from '@inertiajs/core';
 import { Head } from '@inertiajs/react';
-import React, { PropsWithChildren, useState } from 'react';
+import React, {PropsWithChildren, useEffect, useState} from 'react';
 import useRoute from '@/Hooks/useRoute';
 import useTypedPage from '@/Hooks/useTypedPage';
 import Banner from '@/Components/common/Banner';
@@ -8,27 +8,29 @@ import PrimaryNavigation from "@/Components/containers/pc/PrimaryNavigation";
 import PrimaryNavigationMobile from "@/Components/containers/mobile/PrimaryNavigationMobile";
 import {Navlink} from "@/Types/NavigationProps";
 
-const navLinks : Navlink[] = [
-    {
-        label: "Home",
-        routeName: "home",
-    },
-    {
-        label: "About",
-        routeName: "about",
-    },
-    {
-        label: "Úklidové služby",
-        routeName: "products.list",
-    },
-];
+// const navLinks : Navlink[] = [
+//     {
+//         label: "Home",
+//         routeName: "home",
+//     },
+//     {
+//         label: "About",
+//         routeName: "about",
+//     },
+//     {
+//         label: "Úklidové služby",
+//         routeName: "products.list",
+//     },
+// ];
 
 
 export default function AppLayout({
   children,
 }: PropsWithChildren<{}>) {
+
   const page = useTypedPage();
   const route = useRoute();
+  const navLinks = page.props.navLinks as Navlink[];
   const title = page.props.title as string ?? 'Letahir';
   const [showingNavigationDropdown, setShowingNavigationDropdown] =
     useState(false);

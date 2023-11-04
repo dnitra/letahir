@@ -22,8 +22,8 @@ export default function Index({products}: any) {
                                          alt={product.title} />
                                     <div className="flex flex-col justify-center items-center w-full h-60">
                                         <div className="w-full text-center font-bold text-xl my-8">{product.title}</div>
-                                        <Link href={route('products.show', [product.prettyUrl])} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 hover:bg-gray-300">Více informací</Link>
-                                        <Link href={route('products.order', [product.prettyUrl])} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 hover:bg-gray-300">Objednat</Link>
+                                        <Link preserveState={true} href={route('products.show', [product.prettyUrl])} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 hover:bg-gray-300">Více informací</Link>
+                                        <Link preserveState={true} href={route('products.order', [product.prettyUrl])} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 hover:bg-gray-300">Objednat</Link>
                                     </div>
                                 </div>
                             </div>

@@ -30,7 +30,7 @@ export default function ResponsiveNavLink({
           {children}
         </button>
       ) : (
-        <Link href={href || ''} className={classes}>
+        <Link preserveState={true} href={href || ''} className={classes}>
           {children}
         </Link>
       )}

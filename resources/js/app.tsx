@@ -9,7 +9,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import AppLayout from "@/Layouts/AppLayout";
 
 const appName =
-  window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+  window.document.getElementsByTagName('title')[0]?.innerText ;
 
 createInertiaApp({
   title: title => `${title} - ${appName}`,
@@ -17,7 +17,7 @@ createInertiaApp({
     color: '#4B5563',
   },
   resolve: name =>{
-      const pages = import.meta.glob('./Pages/**/*.tsx', { eager: true })
+      const pages = import.meta.glob('./Pages/**/**/*.tsx', { eager: true })
       let page : any = pages[`./Pages/${name}.tsx`]
       page.default.layout = page.default.layout || ((page : any) => <AppLayout children={page} />)
       return page
