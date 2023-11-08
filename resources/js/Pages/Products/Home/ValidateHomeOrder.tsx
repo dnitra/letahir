@@ -1,39 +1,38 @@
-export default function validateHomeOrder(form:any) {
+import OrderData from "@/Pages/Products/Home/types/OrderDataInterface";
+import Validation from "@/Types/Validation";
 
-    Object.keys(form.data).forEach((key:any)=>{
-        form.setError(key, '')
-    })
-
-    let isOk:boolean = true
-    if (form.data.email === ''){
-        form.setError('email', 'Vyplňte prosím email')
-        isOk = false
-    }
-
-    if (form.data.phone === ''){
-        form.setError('phone', 'Vyplňte prosím telefon')
-        isOk = false
+export default function validateHomeOrder(form: { data: OrderData; setError: (field: keyof OrderData, message: string) => void }) {
+    const validationRules : Validation<OrderData> = {
+        email: 'Vyplňte prosím email',
+        phone: 'Vyplňte prosím telefon',
+        street: 'Vyplňte prosím ulici',
+        streetNumber: 'Vyplňte prosím číslo popisné',
+        city: 'Vyplňte prosím město',
+        zip: 'Vyplňte prosím PSČ',
+        date: 'Vyplňte prosím datum',
     }
 
-    if (form.data.street === ''){
-        form.setError('street', 'Vyplňte prosím ulici')
-        isOk = false
+    // Reset errors for all fields using validationRules
+    for (const key in form.data) {
+        if (Object.prototype.hasOwnProperty.call(form.data, key)) {
+            form.setError(key as keyof OrderData, '');
+        }
     }
-    if (form.data.streetNumber === ''){
-        form.setError('streetNumber', 'Vyplňte prosím číslo popisné')
-        isOk = false
+
+    // Check for missing values and set errors based on validationRules
+    let isOk: boolean = true;
+    let field: keyof OrderData;
+    for (field in form.data) {
+        if (Object.prototype.hasOwnProperty.call(form.data, field)) {
+            if (form.data[field] === '' || form.data[field] === null) {
+                const validationMessage = validationRules[field];
+                if (validationMessage) {
+                    form.setError(field, validationMessage);
+                    isOk = false;
+                }
+            }
+        }
     }
-    if (form.data.city === ''){
-        form.setError('city', 'Vyplňte prosím město')
-        isOk = false
-    }
-    if (form.data.zip === ''){
-        form.setError('zip', 'Vyplňte prosím PSČ')
-        isOk = false
-    }
-    if (form.data.date === ''){
-        form.setError('date', 'Vyplňte prosím datum')
-        isOk = false
-    }
-    return isOk
+
+    return isOk;
 }

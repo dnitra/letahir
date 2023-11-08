@@ -21,58 +21,41 @@ import TimeInput from "@/Components/FormHelpers/TimeInput";
 import TimeInputSettings from "@/Enums/TimeInputSettings";
 import ContactForm from "@/Components/FormHelpers/ContactForm";
 import FormInput from "@/Types/FormInput";
-import FormSummary from "@/Components/FormHelpers/FormSummary";
+import HomeOrderFormSummary from "@/Components/FormHelpers/HomeOrderFormSummary";
 import FormErrorMessage from "@/Components/FormHelpers/FormErrorMessage";
 import validateHomeOrder from "@/Pages/Products/Home/ValidateHomeOrder";
-``
+import OrderData from "@/Pages/Products/Home/types/OrderDataInterface";
 
-interface OrderData {
-    rooms: number;
-    bathrooms: number;
-    propertyType: PropertyType;
-    regularity: RegularityType;
-    date: DATE |''
-    time: Time;
-    email: string;
-    phone: string;
-    street: string;
-    streetNumber: string;
-    city: string;
-    zip: string;
-    note: string;
-    price: number;
+interface HomeCleaningProducts {
+    name: string;
+    minPrice: number;
+    roomPrice: number;
+    bathroomPrice: number;
+    multipliers: {
+        regularity: {
+            [RegularityType.SINGLETIME]: number;
+            [RegularityType.WEEKLY]: number;
+            [RegularityType.BIWEEKLY]: number;
+            [RegularityType.MONTHLY]: number;
+        };
+    };
 }
 
-
-interface HomeCleaningProduct {
-    [key: string]: {
-        [key: string] : number | string | {}
-        multipliers: {
-            [key:string] :{
-                [key:string] : number
-            }
-        }
-    }
-}
-
-const products: HomeCleaningProduct = {
-    homeCleaning: {
-        name: 'Home Cleaning',
-        minPrice: 900,
-        roomPrice: 350,
-        bathroomPrice: 400,
-        multipliers: {
-            regularity:
-                {
-                    singleTime: 1.0,
-                    weekly: 0.9,
-                    biweekly: 0.85,
-                    monthly: 0.8,
-                },
-
+const products: HomeCleaningProducts = {
+    name: 'Home Cleaning',
+    minPrice: 900,
+    roomPrice: 350,
+    bathroomPrice: 400,
+    multipliers: {
+        regularity: {
+            [RegularityType.SINGLETIME]: 0,
+            [RegularityType.WEEKLY]: 0.2,
+            [RegularityType.BIWEEKLY]: 0.15,
+            [RegularityType.MONTHLY]: 0.1,
         },
     },
 };
+
 
 const formInfo: FormInput[] = [
     {
@@ -93,12 +76,15 @@ const formInfo: FormInput[] = [
     },
 ];
 
+interface RegularityOption extends Option{
+    value: RegularityType;
+}
 
-const regularityOptions : Option[] = [
+const regularityOptions : RegularityOption[] = [
     { label: 'Jednorázově', value: RegularityType.SINGLETIME },
-    { label: 'Týdně', value: RegularityType.WEEKLY, priceMultiplier: 0.8},
-    { label: 'Dvakrát měsíčně', value: RegularityType.BIWEEKLY, priceMultiplier: 0.85},
-    { label: 'Měsíčně', value: RegularityType.MONTHLY , priceMultiplier: 0.9},
+    { label: 'Týdně', value: RegularityType.WEEKLY},
+    { label: 'Dvakrát měsíčně', value: RegularityType.BIWEEKLY},
+    { label: 'Měsíčně', value: RegularityType.MONTHLY},
 ];
 
 const propertyTypeOptions : Option[] = [
@@ -152,14 +138,30 @@ export default function Order() {
 
     const form = useForm('OrderHome',initialData)
     const user  = useTypedPage().props.auth
-    const handleSubmit = ()=>{
+    const handleSubmit = (e : React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
         if (!validateHomeOrder(form)) return
-
         form.post(route('order.post'),{
             errorBag: 'OrderHome',
             preserveScroll: true
         })
     }
+
+    // @ts-ignore
+    // @ts-ignore
+    useEffect(()=>{
+
+        const roomPrice = form.data.rooms * products.roomPrice
+        const bathroomPrice = form.data.bathrooms * products.bathroomPrice
+        const regularityMultiplier = 1 - products.multipliers.regularity[form.data.regularity]
+        const propertyTypeMultiplier =  propertyTypeOptions.find(option => option.value === form.data.propertyType)?.priceMultiplier || 1
+
+        let price = ((roomPrice + bathroomPrice) *  propertyTypeMultiplier)
+        price = price < products.minPrice ? products.minPrice : price
+        price = price * regularityMultiplier
+        form.setData('price',price)
+        // @ts-ignore
+    },Object.values(form.data).filter(key => key !== form.data.price));
 
     return (
             <div className={'grid col-span-1 md:grid-cols-7 gap-8'}>
@@ -168,7 +170,6 @@ export default function Order() {
                         <FormSection
                             title={'Objednávka'}
                             description={'Objednejte si úklid pro svou domácnost'}
-                            onSubmit={handleSubmit}
                         >
 
                             <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
@@ -183,13 +184,11 @@ export default function Order() {
                             <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                                 <InputLabel htmlFor={'regularity'} value={'Pravidelnost'} />
                                 <SelectInput options={regularityOptions} label={'regularity'} form={form} />
-                                <FormErrorMessage error={form.errors.regularity} />
                             </div>
 
                             <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                                 <InputLabel htmlFor={'propertyType'} value={'Typ nemovitosti'} />
                                 <SelectInput options={propertyTypeOptions} label={'propertyType'} form={form} />
-                                <FormErrorMessage error={form.errors.propertyType} />
                             </div>
 
                             <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
@@ -209,19 +208,18 @@ export default function Order() {
                             </div>
                             <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                                 <InputLabel htmlFor={'time'} value={'Čas'} />
-                                <TimeInput form={form} label={'time'}  timeInputSetting={timeInputSettings} />
+                                <TimeInput form={form} label={'time'} timeInputSetting={timeInputSettings} />
                                 <FormErrorMessage error={form.errors.time} />
                             </div>
                         </FormSection>
                     </div>
-                    <ContactForm form={form} handleSubmit={handleSubmit} />
+                    <ContactForm form={form}/>
                 </section>
 
                 <div className="col-span-1 md:col-span-2">
                     <div className="sticky top-5">
-                        <div className="bg-white p-5 rounded-lg shadow-lg z-50">
-                            <h2>Shrnutí objednávky:</h2>
-                            <FormSummary form={form} formInfo={formInfo} />
+                        <div className="hidden bg-white p-5 rounded-lg shadow-lg lg:block">
+                            <HomeOrderFormSummary form={form} formInfo={formInfo} handleSubmit={handleSubmit} />
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useReducer } from 'react';
 import { Option } from '@/Types/Select';
 import {InertiaFormProps} from "@inertiajs/react/types/useForm";
 import {GenericFormData} from "@/Types/GenericFormData";
+import FormErrorMessage from "@/Components/FormHelpers/FormErrorMessage";
 
 
 enum ActionType {
@@ -77,33 +78,36 @@ const SelectInput: React.FC<Props<any>> = ({
     }
 
     return (
-        <div className="w-full relative inline-block text-gray-700" id='pravidelnost' ref={selectRef}>
-            <div
-                className={`p-2 bg-white border rounded ${state.isOpen ? 'border-gray-600' : 'border-gray-300'} cursor-pointer w-full flex justify-between items-center`}
-                onClick={() => dispatch({ type: ActionType.OPEN })}
-            >
-                <span>{options.find((option) => option.value === state.selectedValue)?.label}</span>
-                <span className="ml-2">&#9660;</span> {/* Down arrow indicating the dropdown */}
-            </div>
-            {state.isOpen && (
-                <ul
-                    className="absolute mt-2 w-full max-h-40 overflow-y-auto bg-white border rounded border-gray-300 shadow-lg z-30"
-                    style={{ top: selectRef.current?.offsetHeight }}
+        <>
+            <div className="w-full relative inline-block text-gray-700" id='pravidelnost' ref={selectRef}>
+                <div
+                    className={`p-2 bg-white border rounded ${state.isOpen ? 'border-gray-600' : 'border-gray-300'} cursor-pointer w-full flex justify-between items-center`}
+                    onClick={() => dispatch({ type: ActionType.OPEN })}
                 >
-                    {options.map((option) => (
-                        <li
-                            key={option.value}
-                            onClick={() => handleSelect(option)}
-                            className={`w-full px-4 py-2 cursor-pointer ${
-                                state.selectedValue === option.value ? 'bg-gray-200' : 'hover:bg-gray-100'
-                            }`}
-                        >
-                            {option.label}
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
+                    <span>{options.find((option) => option.value === state.selectedValue)?.label}</span>
+                    <span className="ml-2">&#9660;</span> {/* Down arrow indicating the dropdown */}
+                </div>
+                {state.isOpen && (
+                    <ul
+                        className="absolute mt-2 w-full max-h-40 overflow-y-auto bg-white border rounded border-gray-300 shadow-lg z-30"
+                        style={{ top: selectRef.current?.offsetHeight }}
+                    >
+                        {options.map((option) => (
+                            <li
+                                key={option.value}
+                                onClick={() => handleSelect(option)}
+                                className={`w-full px-4 py-2 cursor-pointer ${
+                                    state.selectedValue === option.value ? 'bg-gray-200' : 'hover:bg-gray-100'
+                                }`}
+                            >
+                                {option.label}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+            <FormErrorMessage error={form.errors[label]} />
+        </>
 
     );
 };

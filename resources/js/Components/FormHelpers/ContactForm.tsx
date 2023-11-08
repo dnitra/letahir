@@ -8,7 +8,7 @@ import FormErrorMessage from "@/Components/FormHelpers/FormErrorMessage";
 
 interface Props {
     form: any;
-    handleSubmit: any;
+    handleSubmit?(): React.FormEventHandler<HTMLFormElement>;
 }
 
 export default function ContactForm({handleSubmit,form}:Props) : JSX.Element {
@@ -16,20 +16,7 @@ export default function ContactForm({handleSubmit,form}:Props) : JSX.Element {
         <FormSection
             title={'Kontaktní údaje'}
             description={'Vyplňte kontaktní údaje'}
-            onSubmit={handleSubmit}
-            renderActions={() => (
-                <>
-                    <ActionMessage on={form.recentlySuccessful} className="mr-3">
-                        Odesláno
-                    </ActionMessage>
-                    <PrimaryButton
-                        className={classNames({ 'opacity-25': form.processing })}
-                        disabled={form.processing}
-                    >
-                        Odeslat
-                    </PrimaryButton>
-                </>
-            )}
+            {...(handleSubmit && {onSubmit: handleSubmit})}
         >
             <div className="col-span-6 flex flex-col gap-2 lg:col-span-3">
                 <InputLabel htmlFor={'email'} value={'Email'} />

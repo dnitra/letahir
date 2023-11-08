@@ -6,7 +6,7 @@ interface Props {
   title: string;
   description: string;
   renderActions?(): JSX.Element;
-  onSubmit(): void;
+  onSubmit?(): React.FormEventHandler<HTMLFormElement>;
 }
 
 export default function FormSection({
@@ -26,7 +26,7 @@ export default function FormSection({
         <form
           onSubmit={e => {
             e.preventDefault();
-            onSubmit();
+            onSubmit?.();
           }}
         >
           <div
