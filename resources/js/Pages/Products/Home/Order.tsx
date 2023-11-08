@@ -164,7 +164,7 @@ export default function Order() {
     },Object.values(form.data).filter(key => key !== form.data.price));
 
     return (
-            <div className={'grid col-span-1 md:grid-cols-7 gap-8'}>
+            <div className={'grid col-span-1 lg:grid-cols-7 gap-8'}>
                 <section className={'col-span-1 md:col-span-5'}>
                     <div className={'mb-6'}>
                         <FormSection
@@ -215,14 +215,15 @@ export default function Order() {
                     </div>
                     <ContactForm form={form}/>
                 </section>
-
-                <div className="col-span-1 md:col-span-2">
+                {/*skip one col-span on md*/}
+                <div className="col-span-1 md:col-span-7 lg:col-span-2">
                     <div className="sticky top-5">
-                        <div className="hidden bg-white p-5 rounded-lg shadow-lg lg:block">
+                        <div className="bg-white p-5 rounded-lg shadow-lg">
                             <HomeOrderFormSummary form={form} formInfo={formInfo} handleSubmit={handleSubmit} />
                         </div>
                     </div>
                 </div>
+
             </div>
     );
 }

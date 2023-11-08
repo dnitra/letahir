@@ -15,7 +15,7 @@ interface PropertyDataProps {
 }
 
 function HomeOrderFormSummary({form, formInfo, handleSubmit}: PropertyDataProps) {
-    const itemClass = 'flex flex-col items-center justify-between lg:flex-row';
+    const itemClass = 'flex flex-row gap-2 justify-center items-center lg:justify-between lg:items-start'
     return (
         //display none on small but not on large
         <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-full">
@@ -38,26 +38,18 @@ function HomeOrderFormSummary({form, formInfo, handleSubmit}: PropertyDataProps)
                 <div>Typ nemovitosti:</div>
                 <div>{form.data.propertyType === PropertyType.Flat ? 'Byt' : 'Dům'}</div>
             </div>
-            <div className={itemClass}>
-                <div>Celková cena:</div>
-                <div>{form.data.price} Kč</div>
-            </div>
             <ActionMessage on={form.recentlySuccessful} className="mr-3">
                 Objednávka byla úspěšně odeslána.
             </ActionMessage>
             <PrimaryButton
                 type="submit"
-                className={classNames({'opacity-25': form.processing})+' flex justify-center h-20 w-full text-base fixed bottom-0 left-0 lg:static ' +
-                    'lg:w-auto lg:h-auto'}
+                className={classNames({'opacity-25': form.processing})+'justify-center h-20 w-full lg:h-12 '}
                 disabled={form.processing}
             >
-                Objednat
-                {/*disapear when md screen and large text*/}
-                <span className="md:hidden text-white">
-                        {form.data.price} Kč
-                </span>
+                        <span className={'text-xl lg:text-xs'}>
+                            Odeslat objednávku za {form.data.price} Kč
+                        </span>
             </PrimaryButton>
-
         </form>
     );
 }
